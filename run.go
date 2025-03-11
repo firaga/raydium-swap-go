@@ -12,9 +12,10 @@ import (
 	"github.com/scribesavant/raydium-swap-go/raydium/utils"
 )
 
+// https://solscan.io/tx/4mtZ83khqixPWEmw1FfU9nV2msfmeRFsHxnxzVrFRXECYXsWmrSpYGkSM8kZz9zedNKzcYUTGHv1o4Mskf8rauYR
 func main() {
 
-	executeTransaction := false
+	executeTransaction := true
 
 	connection := rpc.New(os.Getenv("RPC_URL"))
 	raydium := raydium.New(connection, os.Getenv("WALLET_PRIVATE_KEY"))
@@ -24,10 +25,10 @@ func main() {
 
 	slippage := utils.NewPercent(1, 100) // 1% slippage (for 0.5 set second parameter to "1000" example: utils.NewPercent(5, 1000) )
 
-	amount := utils.NewTokenAmount(inputToken, 0.1) // 0.1 sol
+	amount := utils.NewTokenAmount(inputToken, 0.001) // 0.1 sol
 
 	poolKeys, err := raydium.Pool.GetPoolKeys(inputToken.Mint, outputToken.Mint)
-
+	spew.Dump(poolKeys)
 	if err != nil {
 		panic(err)
 	}
@@ -45,6 +46,7 @@ func main() {
 			MicroLamports: 25000, // fee 0.000025 sol
 		},
 	)
+	spew.Dump(tx)
 
 	if err != nil {
 		panic(err)
